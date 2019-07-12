@@ -104,7 +104,7 @@ eval("class DomNodeCollection {\n\n\tconstructor(collection){\n\t\tthis.collecti
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const DomNodeCollection = __webpack_require__(/*! ./dom_node_collection.js */ \"./src/dom_node_collection.js\");\n\nwindow.$l = (selector) => {\n\tif(selector instanceof HTMLElement){\n\t\tlet node_list = [selector];\n\t\treturn new DomNodeCollection(node_list);\n\t} else {\n\t\tlet node_list = document.querySelectorAll(selector);\n\t\treturn new DomNodeCollection(Array.from(node_list));\n\t}\n}\n\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const DomNodeCollection = __webpack_require__(/*! ./dom_node_collection.js */ \"./src/dom_node_collection.js\");\n\nconst functionsReady = [];\n\nwindow.$l = (selector) => {\n\tif(selector instanceof HTMLElement){\n\t\tlet node_list = [selector];\n\t\treturn new DomNodeCollection(node_list);\n\t} \n\telse if(typeof selector === \"function\"){\n\t\tif(!(document.readyState === \"complete\")){\n\t\t\tfunctionsReady.push(selector);\n\t\t}\n\t\telse {\n\t\t\tselector();\n\t\t}\n\t} else {\n\t\tlet node_list = document.querySelectorAll(selector);\n\t\treturn new DomNodeCollection(Array.from(node_list));\n\t}\n\n}\n\n$l.extend = function(...args){\n\tfor(let i = 0; i < args.length; i++){\n\t\tfor(let k = 0; k < Object.keys(args[i]).length; k++){\n\t\t\tlet key = Object.keys(args[i])[k];\n\t\t\tlet value = Object.values(args[i])[k];\n\t\t\targs[0][key] = value;\n\t\t}\n\t}\n\treturn args[0];\n}\n\n$l.ajax = function(options){\n\t\n}\n\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 
