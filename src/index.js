@@ -33,6 +33,38 @@ $l.extend = function(...args){
 }
 
 $l.ajax = function(options){
-	
+	const DEFAULTS = {
+		method: 'GET',
+		url: window.location.href,
+		success(data){console.log(data)},
+		error: "error(){console.error('An error occurred.')}",
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+		data: {}
+	}
+	options = $l.extend(DEFAULTS, options);
+	if(options.method === "GET"){
+		options.url += `?${urlData(options.data)}`;
+	}
+	const xhr = new XMLHttpRequest();
+	xhr.open(options.method, options.url);
+	xhr.onload = function(s){
+		if(xhr.status === 200){
+			options.success(xhr.response);
+		} else {
+			options.error(xhr.response);
+		}
+	};
+	xhr.send(JSON.stringify(options.data));
 }
 
+urlData = (data) => {
+	let url = "";
+	for(let i = 0; i < Object.keys(data).length; i++){
+		if(i === Object.keys(data).length - 1){
+			url += `${Object.keys(data)[i]}=${Object.values(data)[i]}`;
+		} else {
+			url += `${Object.keys(data)[i]}=${Object.values(data)[i]}&`;
+		}
+	}
+	return url;
+}
